@@ -1,11 +1,24 @@
 package com.bookverse.backend.dto;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+
 
 public class ReviewRequest {
+
+    @NotBlank(message = "Book ID is required")
     private String bookId;
+
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating must be at most 5")
     private int rating;
+
+    @Size(max = 1000, message = "Review text must not exceed 1000 characters")
     private String text;
 
-    public ReviewRequest() {}
+
 
     public ReviewRequest(String bookId, int rating, String text) {
         this.bookId = bookId;

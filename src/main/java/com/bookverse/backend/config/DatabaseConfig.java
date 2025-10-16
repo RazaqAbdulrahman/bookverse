@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableScheduling
 @Slf4j
+@ConditionalOnMissingBean(DataSource.class)
 public class DatabaseConfig {
 
     @Value("${spring.datasource.url}")

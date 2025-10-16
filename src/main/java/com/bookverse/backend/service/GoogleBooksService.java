@@ -2,6 +2,7 @@ package com.bookverse.backend.service;
 
 import com.bookverse.backend.model.BookCache;
 import com.bookverse.backend.repository.BookCacheRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class GoogleBooksService {
 
     @Value("${google.api.key}")
@@ -28,6 +30,7 @@ public class GoogleBooksService {
     public String searchBooks(String query, Integer maxResults, Integer startIndex) {
         StringBuilder url = new StringBuilder(GOOGLE_BOOKS_API_URL);
         url.append("?q=").append(query);
+
 
         if (maxResults != null) {
             url.append("&maxResults=").append(maxResults);
@@ -46,8 +49,8 @@ public class GoogleBooksService {
         try {
             return restTemplate.getForObject(url.toString(), String.class);
         } catch (Exception e) {
-            log.error("Error searching books: {}", e.getMessage());
-            throw new RuntimeException("Failed to search books: " + e.getMessage());
+            log.error("Error searching books: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to search books: " + e.getMessage(), e);
         }
     }
 
@@ -80,13 +83,14 @@ public class GoogleBooksService {
             BookCache bookCache = BookCache.builder()
                     .bookId(bookId)
                     .payload(response)
+                    .cachedAt(LocalDateTime.now()) // explicitly set
                     .build();
             bookCacheRepository.save(bookCache);
 
             return response;
         } catch (Exception e) {
-            log.error("Error fetching book: {}", e.getMessage());
-            throw new RuntimeException("Failed to fetch book: " + e.getMessage());
+            log.error("Error fetching book: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch book: " + e.getMessage(), e);
         }
     }
 
@@ -97,4 +101,5 @@ public class GoogleBooksService {
         log.info("Cleared expired book cache");
     }
 }
+
 

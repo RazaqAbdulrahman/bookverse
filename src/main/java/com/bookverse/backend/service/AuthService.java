@@ -6,6 +6,7 @@ import com.bookverse.backend.dto.RegisterRequest;
 import com.bookverse.backend.exception.EmailAlreadyExistsException;
 import com.bookverse.backend.model.User;
 import com.bookverse.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
 
     private final UserRepository userRepository;

@@ -121,6 +121,12 @@ public class DatabaseBackupService {
         }
     }
 
+    @Value("${app.backup.pg-dump-path:pg_dump}")
+    private String pgDumpPath;
+
+    @Value("${app.backup.pg-restore-path:pg_restore}")
+    private String pgRestorePath;
+
     private String extractDatabaseName(String url) {
         // Extract database name from JDBC URL
         // jdbc:postgresql://localhost:5432/bookverse_db
